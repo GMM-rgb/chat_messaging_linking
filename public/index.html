@@ -96,15 +96,17 @@
             padding: 4px;
             display: flex;
             flex-direction: column;
-            justify-content: space-evenly;
+            justify-content: auto;
             z-index: 10;
         }
 
         .messages {
-            flex: 1;
+            width: 100%;
+            height: 100%;
             padding: 10px;
-            overflow-y: auto;
             z-index: 10;
+            overflow-y: auto;
+            overflow-x: hidden;
             background: rgba(255, 255, 255, 0.25);
             border: 2px solid #ccc;
             border-bottom: none;
@@ -136,6 +138,9 @@
             display: flex;
             padding: 10px;
             border-top: 1px solid #ccc;
+            justify-content: auto;
+            flex-direction: row;
+            gap: 12px;
             background: #eee;
         }
 
@@ -318,6 +323,9 @@
         .chat-message {
             display: flex;
             align-items: flex-start;
+            flex-direction: row;
+            flex-basis: content;
+            flex-grow: var(--flex-grow, 1);
             margin-bottom: 10px;
         }
 
@@ -341,6 +349,10 @@
             outline-offset: 1px;
             position: relative;
             width: 100%;
+            text-overflow: clip;
+            text-rendering: optimizeSpeed;
+            text-wrap: balance;
+            text-wrap-style: end;
         }
 
         .chat-message .content .discard {
@@ -831,7 +843,6 @@
                     const friendChatList = document.getElementById('friendChatList');
                     yourChatList.innerHTML = "";
                     friendChatList.innerHTML = "";
-                    document.title = `Chat Messaging System - ${currentUser.username}`;
                     
                     // Your created chats
                     if (data.yourChats && data.yourChats.length > 0) {
@@ -862,6 +873,7 @@
                 .catch(error => {
                     console.error('Error loading chats:', error);
                 });
+                document.title = `Chat Messaging System - ${currentUser.username}`;
         }
 
         // Add enter key event listeners for login and signup
@@ -1129,9 +1141,9 @@
             if (!friendListModal.classList.contains('hidden') && currentUser) loadFriends();
         }, 10000);
 
-        // Idle detection simulation for away status could be added here (optional demo)
+        // Add the idle function here later.
 
-        // Add periodic message updates for current chat
+        // Added periodic message updates for current chat
         function startMessagePolling() {
             if (selectedChatId) {
                 fetch('/messages?conversationId=' + selectedChatId)

@@ -19,7 +19,7 @@ const USERS_FILE = 'users.json';
 const MESSAGES_FILE = 'messages.json';
 const UPLOADS_DIR = 'uploads';
 
-// Ensure uploads directory exists
+// Ensures uploads directory exists
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR);
 }

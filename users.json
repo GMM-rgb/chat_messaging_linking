@@ -4,13 +4,22 @@
     "username": "Maximus F",
     "password": "592011",
     "friends": [
-      "Admin"
+      "Admin",
+      "User 1"
     ]
   },
   {
     "id": "9c355899-0db1-40b5-8197-0ea8550dc5a3",
     "username": "Admin",
     "password": "20110509",
+    "friends": [
+      "Maximus F"
+    ]
+  },
+  {
+    "id": "16145023-f75c-4369-b639-5b99eec3cdbe",
+    "username": "User 1",
+    "password": "0000",
     "friends": [
       "Maximus F"
     ]

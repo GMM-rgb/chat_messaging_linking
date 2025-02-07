@@ -189,5 +189,114 @@
     "message": "Yeah.",
     "timestamp": "2025-02-07T04:22:45.269Z",
     "type": "message"
+  },
+  {
+    "id": "f5bbc852-c28a-45db-976e-961bb952b8a5",
+    "conversationName": "jefesjfbehsfbhff df",
+    "type": "chat",
+    "timestamp": "2025-02-07T16:52:22.937Z"
+  },
+  {
+    "id": "15a6cd63-2284-48e9-b1b7-3d36784e6515",
+    "fromUsername": "Maximus F",
+    "conversationId": "f5bbc852-c28a-45db-976e-961bb952b8a5",
+    "message": "Hi",
+    "timestamp": "2025-02-07T16:52:26.777Z",
+    "type": "message"
+  },
+  {
+    "id": "6a8b1003-956b-4b33-b45a-6cf3840e0943",
+    "conversationName": "Module Chat 1",
+    "type": "chat",
+    "timestamp": "2025-02-07T19:40:32.975Z"
+  },
+  {
+    "id": "812d00a2-fc64-452d-869b-6ec46f0c1ea8",
+    "fromUsername": "Admin",
+    "conversationId": "6a8b1003-956b-4b33-b45a-6cf3840e0943",
+    "message": "Hi",
+    "timestamp": "2025-02-07T19:40:51.232Z",
+    "type": "message"
+  },
+  {
+    "id": "1d010001-3666-48aa-ac6e-af7821531cb8",
+    "fromUsername": "Maximus F",
+    "conversationId": "6a8b1003-956b-4b33-b45a-6cf3840e0943",
+    "message": "Hi",
+    "timestamp": "2025-02-07T19:40:57.663Z",
+    "type": "message"
+  },
+  {
+    "id": "096897e3-6fe0-48fc-ac62-fd36dc039937",
+    "conversationName": "Module Chat 2",
+    "type": "chat",
+    "timestamp": "2025-02-07T20:08:33.359Z"
+  },
+  {
+    "id": "6e99199e-9522-45aa-bc6c-fbf48e08a98d",
+    "fromUsername": "Maximus F",
+    "conversationId": "096897e3-6fe0-48fc-ac62-fd36dc039937",
+    "message": "New chat everyone this will be the sub module chat for main.",
+    "timestamp": "2025-02-07T20:09:00.962Z",
+    "type": "message"
+  },
+  {
+    "id": "8ffc8799-86c2-451d-8c08-4598bfa07787",
+    "fromUsername": "Admin",
+    "conversationId": "096897e3-6fe0-48fc-ac62-fd36dc039937",
+    "message": "Hello, test, test.",
+    "timestamp": "2025-02-07T20:09:43.328Z",
+    "type": "message"
+  },
+  {
+    "id": "f1003a7a-139f-4b3a-a5a6-2eee1ea615ba",
+    "conversationName": "Messaging to",
+    "type": "friend-chat",
+    "creator": "5a84023f-76d3-41d4-a414-3ef95f3e11e8",
+    "participants": [
+      "5a84023f-76d3-41d4-a414-3ef95f3e11e8",
+      "16145023-f75c-4369-b639-5b99eec3cdbe"
+    ],
+    "timestamp": "2025-02-07T20:10:25.622Z"
+  },
+  {
+    "id": "e28bc657-e936-4af1-943d-249e9ace3517",
+    "fromUsername": "User 1",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Hey.",
+    "timestamp": "2025-02-07T20:11:41.110Z",
+    "type": "message"
+  },
+  {
+    "id": "976a13bd-7c42-483f-b246-daf7affd20e6",
+    "fromUsername": "Admin",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Hello",
+    "timestamp": "2025-02-07T20:11:52.685Z",
+    "type": "message"
+  },
+  {
+    "id": "f71ff179-ef74-4477-99e6-e57d1114817e",
+    "fromUsername": "Maximus F",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "sup",
+    "timestamp": "2025-02-07T20:11:58.638Z",
+    "type": "message"
+  },
+  {
+    "id": "ff38530f-3e60-486f-a706-de1e90004388",
+    "fromUsername": "Maximus F",
+    "conversationId": "6a8b1003-956b-4b33-b45a-6cf3840e0943",
+    "message": "Test, test testing sending.",
+    "timestamp": "2025-02-07T20:16:27.734Z",
+    "type": "message"
+  },
+  {
+    "id": "cc61c776-9353-40e5-bda4-50bfdabab756",
+    "fromUsername": "Maximus F",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH, Mmmm message",
+    "timestamp": "2025-02-07T21:15:04.924Z",
+    "type": "message"
   }
 ]
