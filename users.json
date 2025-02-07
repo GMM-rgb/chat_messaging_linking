@@ -1,0 +1,18 @@
+[
+  {
+    "id": "5a84023f-76d3-41d4-a414-3ef95f3e11e8",
+    "username": "Maximus F",
+    "password": "592011",
+    "friends": [
+      "Admin"
+    ]
+  },
+  {
+    "id": "9c355899-0db1-40b5-8197-0ea8550dc5a3",
+    "username": "Admin",
+    "password": "20110509",
+    "friends": [
+      "Maximus F"
+    ]
+  }
+]

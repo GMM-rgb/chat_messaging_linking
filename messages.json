@@ -1,0 +1,137 @@
+[
+  {
+    "id": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "conversationName": "Main Chat",
+    "type": "chat",
+    "timestamp": "2025-02-07T01:29:44.226Z"
+  },
+  {
+    "id": "c0d463be-aeb6-4b5d-9df9-9eec41f915df",
+    "conversationName": "Admin Chat",
+    "type": "friend-chat",
+    "creator": "5a84023f-76d3-41d4-a414-3ef95f3e11e8",
+    "participants": [
+      "5a84023f-76d3-41d4-a414-3ef95f3e11e8",
+      "undefined"
+    ],
+    "timestamp": "2025-02-07T01:41:55.241Z"
+  },
+  {
+    "id": "be6b41da-280f-4491-8586-441e91d24f87",
+    "fromUsername": "Maximus F",
+    "conversationId": "c0d463be-aeb6-4b5d-9df9-9eec41f915df",
+    "message": "Hello",
+    "timestamp": "2025-02-07T01:45:37.181Z",
+    "type": "message"
+  },
+  {
+    "id": "432adc86-047a-4249-baa1-1e53440974bf",
+    "fromUsername": "Admin",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Hi",
+    "timestamp": "2025-02-07T01:50:20.125Z",
+    "type": "message"
+  },
+  {
+    "id": "7829c04d-5701-4711-83a7-b71fc6fc60ee",
+    "fromUsername": "Maximus F",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "How are you?",
+    "timestamp": "2025-02-07T01:50:37.111Z",
+    "type": "message"
+  },
+  {
+    "id": "79a5d7fc-7012-4b0c-a136-4fa821946c8b",
+    "fromUsername": "Admin",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "I'm doing good",
+    "timestamp": "2025-02-07T01:51:19.659Z",
+    "type": "message"
+  },
+  {
+    "id": "f015356f-3b7b-4d48-a6d2-31266c6b040b",
+    "fromUsername": "Maximus F",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Hello again",
+    "timestamp": "2025-02-07T01:56:26.012Z",
+    "type": "message"
+  },
+  {
+    "id": "1743f745-3ae8-48d2-8696-1739b54f5c21",
+    "fromUsername": "Maximus F",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Sup",
+    "timestamp": "2025-02-07T02:00:29.289Z",
+    "type": "message"
+  },
+  {
+    "id": "a6ed5d22-8acd-4ec9-8d92-2433cd9c40ca",
+    "fromUsername": "Maximus F",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Here's a gear.",
+    "timestamp": "2025-02-07T02:41:26.194Z",
+    "type": "message"
+  },
+  {
+    "id": "08286892-762b-4202-8f74-f8eaaa54878d",
+    "fromUsername": "Maximus F",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Wait nevermind",
+    "timestamp": "2025-02-07T02:41:34.789Z",
+    "type": "message"
+  },
+  {
+    "id": "a1749e2f-722d-4efc-a8e5-e089ec26ff29",
+    "fromUsername": "Maximus F",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Still trying to get the File uploading working.",
+    "timestamp": "2025-02-07T02:41:54.364Z",
+    "type": "message"
+  },
+  {
+    "id": "7b34096b-e768-4a15-aeb6-0f878e3440b2",
+    "fromUsername": "Admin",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Hi Hi Hi Hi!",
+    "timestamp": "2025-02-07T02:53:18.184Z",
+    "type": "message"
+  },
+  {
+    "id": "4ffc2db3-43fe-4714-bbe3-480cca109b48",
+    "conversationName": "Homework Chat",
+    "type": "chat",
+    "timestamp": "2025-02-07T02:56:37.315Z"
+  },
+  {
+    "id": "29f724c6-b425-409a-9237-0071a8cb2dda",
+    "fromUsername": "Maximus F",
+    "conversationId": "4ffc2db3-43fe-4714-bbe3-480cca109b48",
+    "message": "Hello Everyone",
+    "timestamp": "2025-02-07T02:56:43.359Z",
+    "type": "message"
+  },
+  {
+    "id": "31882c44-9125-4106-ab94-246af99793e2",
+    "fromUsername": "Admin",
+    "conversationId": "4ffc2db3-43fe-4714-bbe3-480cca109b48",
+    "message": "Hey",
+    "timestamp": "2025-02-07T02:58:28.715Z",
+    "type": "message"
+  },
+  {
+    "id": "1fd1878b-4f72-4c4c-885c-ce149dd3fd74",
+    "fromUsername": "Admin",
+    "conversationId": "dc13c2f1-fdb7-48c9-9af3-b6d5260acffe",
+    "message": "Oh, yeah that's fine.",
+    "timestamp": "2025-02-07T02:58:57.334Z",
+    "type": "message"
+  },
+  {
+    "id": "4f910e6f-3c16-4453-ac9b-e3b55b987ccc",
+    "fromUsername": "Maximus F",
+    "conversationId": "4ffc2db3-43fe-4714-bbe3-480cca109b48",
+    "message": "Hey there",
+    "timestamp": "2025-02-07T03:00:46.756Z",
+    "type": "message"
+  }
+]
