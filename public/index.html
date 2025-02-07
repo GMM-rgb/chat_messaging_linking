@@ -11,6 +11,7 @@
             padding: 0;
             font-family: Arial, sans-serif;
             background: skyblue;
+            overflow: hidden;
         }
 
         /* Sliding auth container */
@@ -689,6 +690,9 @@
         let selectionMode = false;
         let selectedChatId = null; // currently selected chat id
 
+        if(selectedChatId === null){
+            document.getElementById('messages').innerHTML = '<div class="error">Please select a chat to start messaging</div>';
+        }
         // Helper: load messages for a given chat conversation id
         function loadMessagesForChat(chatId) {
             console.log('Loading messages for chat:', chatId);
@@ -715,7 +719,7 @@
         // Enhanced appendMessage function with status indicators
         function appendMessage(msg) {
             // Don't append empty messages or chat creation messages
-            if (!msg.message && !msg.fileUrl && !msg.type) return;
+            if (!msg.message && !msg.fileUrl && !msg.type && selectedChatId === null) return;
             
             const messagesDiv = document.getElementById('messages');
             const messageWrapper = document.createElement('div');
