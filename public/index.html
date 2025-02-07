@@ -376,17 +376,21 @@
             width: 400px;
             height: 100%;
             background: rgba(255, 255, 255, 0.95);
-            transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease-in-out;
             box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
             padding: 20px;
             z-index: 1000;
+            pointer-events: none; /* Start with no interaction */
+            opacity: 0;
         }
 
         .account-panel.show {
             right: 0;
+            opacity: 1;
+            pointer-events: all; /* Enable interaction when visible */
         }
 
-        /* Grid animation for account panel */
+        /* Updated grid animation */
         .account-panel::before {
             content: '';
             position: absolute;
@@ -395,63 +399,75 @@
             right: 0;
             bottom: 0;
             background: 
-                linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px) 0 0 / 20px 20px,
-                linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px) 0 0 / 20px 20px;
+                linear-gradient(90deg, rgba(0,123,255,.1) 1px, transparent 1px) 0 0 / 20px 20px,
+                linear-gradient(rgba(0,123,255,.1) 1px, transparent 1px) 0 0 / 20px 20px;
             opacity: 0;
             transition: opacity 0.3s;
+            pointer-events: none;
         }
 
         .account-panel.show::before {
             opacity: 1;
-            animation: gridFizzle 0.5s ease-out;
+            animation: fadeGrid 0.5s ease-out;
         }
 
-        @keyframes gridFizzle {
-            0% { transform: scale(1.2); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        @keyframes fadeGrid {
+            from { 
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        /* Header controls */
-        .header-controls {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 100;
+        /* Make sure all interactive elements within panel are clickable */
+        .account-panel button,
+        .account-panel input,
+        .account-panel .profile-image-container {
+            position: relative;
+            z-index: 1001;
         }
 
-        .header-controls button {
-            margin-left: 10px;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
+        /* Style updates for better visibility */
+        .account-panel button {
             background: #007bff;
             color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
             cursor: pointer;
-        }
-
-        .profile-image-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .profile-image-container img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 3px solid #007bff;
-            object-fit: cover;
-        }
-
-        .account-form {
-            margin-top: 20px;
-        }
-
-        .account-form input {
-            width: 100%;
-            padding: 8px;
             margin: 5px 0;
+        }
+
+        .account-panel button:hover {
+            background: #0056b3;
+        }
+
+        .account-panel input {
+            margin: 10px 0;
+            padding: 8px;
+            width: 100%;
             border: 1px solid #ccc;
             border-radius: 4px;
+        }
+
+        /* Close button styling */
+        .account-panel .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            z-index: 1002;
+        }
+
+        .account-panel .close-btn:hover {
+            color: #333;
         }
     </style>
 </head>
@@ -529,8 +545,7 @@
     <!-- Friend List Modal -->
     <div id="friendListModal" class="hidden">
         <header>
-            <h3>My Friends</h3>
-            <span id="closeFriendModal">&times;</span>
+            <h3>My Friends</            <span id="closeFriendModal">&times;</span>
         </header>
         <div class="tab-buttons">
             <button id="tabFriends" class="active">Friends</button>
@@ -549,6 +564,7 @@
 
     <!-- Add account panel before closing body tag -->
     <div class="account-panel" id="accountPanel">
+        <button class="close-btn" onclick="closeAccountPanel()">×</button>
         <h2>Account Settings</h2>
         <div class="profile-image-container">
             <img id="profileImage" src="/images/default.png" alt="Profile">
@@ -562,7 +578,6 @@
             <input type="password" id="confirmPassword" placeholder="Confirm New Password">
             <button id="changePasswordBtn">Update Password</button>
         </div>
-        <button style="position:absolute; top:10px; right:10px" onclick="closeAccountPanel()">×</button>
     </div>
 
     <script>
@@ -1035,11 +1050,18 @@
 
         // Add account panel controls
         document.getElementById('accountBtn').addEventListener('click', () => {
-            document.getElementById('accountPanel').classList.add('show');
+            const panel = document.getElementById('accountPanel');
+            panel.classList.add('show');
+            // Reset any form fields
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
         });
 
         function closeAccountPanel() {
-            document.getElementById('accountPanel').classList.remove('show');
+            const panel = document.getElementById('accountPanel');
+            panel.style.transition = 'all 0.3s ease-in-out';
+            panel.classList.remove('show');
         }
 
         // Profile image upload
