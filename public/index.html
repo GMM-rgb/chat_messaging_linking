@@ -469,6 +469,106 @@
         .account-panel .close-btn:hover {
             color: #333;
         }
+
+        /* Global button styles */
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Header controls fix */
+        .header-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1100;
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Account panel button fixes */
+        .account-panel button {
+            display: block;
+            width: calc(100% - 20px);
+            margin: 10px;
+            padding: 10px;
+            font-size: 1em;
+        }
+
+        .account-panel .close-btn {
+            width: auto;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            color: #333;
+            font-size: 24px;
+            padding: 5px 10px;
+        }
+
+        .account-panel .close-btn:hover {
+            background: rgba(0,0,0,0.1);
+            border-radius: 50%;
+        }
+
+        /* Fix friend list modal buttons */
+        .friend-item .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .friend-item .actions button {
+            padding: 5px 10px;
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        /* Chat controls fix */
+        #chatControls {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #chatControls button {
+            flex: 1;
+            padding: 8px;
+            font-size: 1.2em;
+        }
+
+        /* Fix rename button style */
+        .renameChatButton {
+            background: #ffc107;
+            color: #000;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .renameChatButton:hover {
+            background: #ffb300;
+        }
     </style>
 </head>
 
@@ -545,7 +645,8 @@
     <!-- Friend List Modal -->
     <div id="friendListModal" class="hidden">
         <header>
-            <h3>My Friends</            <span id="closeFriendModal">&times;</span>
+            <h3>My Friends</h3>
+            <span id="closeFriendModal">&times;</span>
         </header>
         <div class="tab-buttons">
             <button id="tabFriends" class="active">Friends</button>
@@ -569,14 +670,16 @@
         <div class="profile-image-container">
             <img id="profileImage" src="/images/default.png" alt="Profile">
             <input type="file" id="profileImageInput" accept="image/*" style="display: none">
-            <button onclick="document.getElementById('profileImageInput').click()">Change Profile Picture</button>
+            <button class="profile-btn" onclick="document.getElementById('profileImageInput').click()">
+                Change Profile Picture
+            </button>
         </div>
         <div class="account-form">
             <h3>Change Password</h3>
             <input type="password" id="currentPassword" placeholder="Current Password">
             <input type="password" id="newPassword" placeholder="New Password">
             <input type="password" id="confirmPassword" placeholder="Confirm New Password">
-            <button id="changePasswordBtn">Update Password</button>
+            <button id="changePasswordBtn" class="submit-btn">Update Password</button>
         </div>
     </div>
 
@@ -1128,6 +1231,218 @@
                 document.getElementById('loginPassword').value = '';
             }
         });
+
+        // Ensure all buttons are properly styled on load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Force button styles to be applied
+            document.querySelectorAll('button').forEach(btn => {
+                if (!btn.className) {
+                    btn.className = 'default-btn';
+                }
+            });
+        });
+
+        // Updated loadUserChats function with better error handling and logging
+        function loadUserChats() {
+            if (!currentUser || !currentUser.id) {
+                console.error('No current user found');
+                return;
+            }
+
+            console.log('Loading chats for user:', currentUser);
+            fetch('/user-chats?userId=' + currentUser.id)
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to load chats');
+                    return res.json();
+                })
+                .then(data => {
+                    console.log('Received chats:', data);
+                    const yourChatList = document.getElementById('yourChatList');
+                    const friendChatList = document.getElementById('friendChatList');
+                    yourChatList.innerHTML = "";
+                    friendChatList.innerHTML = "";
+
+                    // Handle public/system chats
+                    if (data.length > 0) {
+                        data.forEach(chat => {
+                            if (chat.type === 'chat') {
+                                const li = document.createElement('li');
+                                li.className = 'chat-item';
+                                li.dataset.conversation = chat.id;
+                                li.innerHTML = `${chat.conversationName} <button class="renameChatButton" onclick="renameChat('${chat.id}')">Rename</button>`;
+                                li.addEventListener('click', () => selectChat(chat.id));
+                                friendChatList.appendChild(li);
+                            }
+                        });
+                    }
+
+                    // Handle friend chats
+                    if (data.friendChats && data.friendChats.length > 0) {
+                        data.friendChats.forEach(chat => {
+                            const li = document.createElement('li');
+                            li.className = 'chat-item';
+                            li.dataset.conversation = chat.id;
+                            li.textContent = chat.conversationName;
+                            li.addEventListener('click', () => selectChat(chat.id));
+                            friendChatList.appendChild(li);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading chats:', error);
+                    alert('Failed to load chats. Please try again.');
+                });
+        }
+
+        // Update login handler to ensure chats are loaded after user data is set
+        document.getElementById('loginBtn').addEventListener('click', function () {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            }).then(res => {
+                if (!res.ok) throw new Error("Login failed");
+                return res.json();
+            }).then(user => {
+                currentUser = user;
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('appSection').classList.remove('hidden');
+                console.log('Logged in as:', user);
+                // Load chats after ensuring user data is set
+                setTimeout(loadUserChats, 100);
+                if (user.profileImage) {
+                    document.getElementById('profileImage').src = '/user-images/' + user.profileImage;
+                }
+            }).catch(err => {
+                console.error('Login error:', err);
+                alert(err.message);
+            });
+        });
+
+        // Fix friend list loading and modal functionality
+        function loadFriends() {
+            if (!currentUser) return;
+            
+            fetch('/friends?username=' + currentUser.username)
+                .then(res => res.json())
+                .then(data => {
+                    friendContent.innerHTML = "";
+                    data.forEach(f => {
+                        const div = document.createElement('div');
+                        div.className = "friend-item";
+                        div.innerHTML = `
+                            <img src="${f.profileImage || '/images/default.png'}" alt="Profile">
+                            <div>
+                                <span class="status-indicator status-${f.status || 'offline'}"></span>
+                                <strong>${f.username}</strong>
+                            </div>
+                            <div class="actions">
+                                <button onclick="createFriendChat('${f.id}','${f.username}')">Message</button>
+                                <button onclick="unfriendUser('${f.username}')">Unfriend</button>
+                                <button onclick="reportUser('${f.username}')">Report</button>
+                            </div>`;
+                        friendContent.appendChild(div);
+                    });
+                })
+                .catch(err => {
+                    console.error('Error loading friends:', err);
+                    friendContent.innerHTML = '<p>Failed to load friends</p>';
+                });
+        }
+
+        // Add friend request functionality
+        document.getElementById('friendRequestBtn').addEventListener('click', function() {
+            const friendUsername = document.getElementById('friendUsername').value.trim();
+            if (!friendUsername) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            fetch('/friend-request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fromUsername: currentUser.username,
+                    toUsername: friendUsername
+                })
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert('Friend request sent!');
+                    document.getElementById('friendUsername').value = '';
+                    loadFriends(); // Refresh friend list
+                } else {
+                    throw new Error('Failed to send friend request');
+                }
+            })
+            .catch(err => alert(err.message));
+        });
+
+        // Add unfriend functionality
+        function unfriendUser(username) {
+            if (confirm(`Are you sure you want to unfriend ${username}?`)) {
+                fetch('/unfriend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fromUsername: currentUser.username,
+                        toUsername: username
+                    })
+                })
+                .then(res => {
+                    if (res.ok) {
+                        loadFriends(); // Refresh list
+                        alert('User unfriended');
+                    }
+                })
+                .catch(err => alert('Failed to unfriend user'));
+            }
+        }
+
+        // Add report functionality
+        function reportUser(username) {
+            const reason = prompt(`Why do you want to report ${username}?`);
+            if (reason) {
+                fetch('/report-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fromUsername: currentUser.username,
+                        toUsername: username,
+                        reason
+                    })
+                })
+                .then(res => {
+                    if (res.ok) alert('User reported');
+                    else alert('Failed to report user');
+                });
+            }
+        }
+
+        // Fix friend list modal controls
+        document.getElementById('openFriendsBtn').addEventListener('click', () => {
+            if (!currentUser) { 
+                alert("Please login first."); 
+                return; 
+            }
+            friendListModal.classList.remove('hidden');
+            friendListModal.classList.add('show');
+            loadFriends(); // Load friends when opening modal
+        });
+
+        document.getElementById('closeFriendModal').addEventListener('click', () => {
+            friendListModal.classList.remove('show');
+            setTimeout(() => friendListModal.classList.add('hidden'), 300);
+        });
+
+        // Add automatic friend list refresh
+        setInterval(() => {
+            if (!friendListModal.classList.contains('hidden') && currentUser) {
+                loadFriends();
+            }
+        }, 10000);
     </script>
 </body>
 

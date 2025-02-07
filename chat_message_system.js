@@ -144,6 +144,33 @@ app.post('/friend-request', (req, res) => {
   res.status(200).send('Friend request accepted');
 });
 
+// Add unfriend endpoint
+app.post('/unfriend', (req, res) => {
+  const { fromUsername, toUsername } = req.body;
+  const users = loadUsers();
+  
+  const fromUser = users.find(user => user.username === fromUsername);
+  const toUser = users.find(user => user.username === toUsername);
+  
+  if (!fromUser || !toUser) {
+      return res.status(400).send('User not found');
+  }
+  
+  fromUser.friends = fromUser.friends.filter(friend => friend !== toUsername);
+  toUser.friends = toUser.friends.filter(friend => friend !== fromUsername);
+  
+  saveUsers(users);
+  res.status(200).send('Unfriended successfully');
+});
+
+// Add report user endpoint
+app.post('/report-user', (req, res) => {
+  const { fromUsername, toUsername, reason } = req.body;
+  // In a real app, save this to a reports database
+  console.log(`${fromUsername} reported ${toUsername} for: ${reason}`);
+  res.status(200).send('Report received');
+});
+
 // Updated message endpoint
 app.post('/message', (req, res) => {
   const { fromUsername, conversationId, message } = req.body;
@@ -240,22 +267,29 @@ app.delete('/delete-chat', (req, res) => {
   res.status(200).send("Chat deleted successfully");
 });
 
-// New endpoint to get friend list for a given username
+// Update friends endpoint to include more user details
 app.get('/friends', (req, res) => {
   const { username } = req.query;
-  if (!username) return res.status(400).send("Username query parameter required");
+  if (!username) return res.status(400).send("Username required");
+  
   const users = loadUsers();
   const user = users.find(u => u.username === username);
-  if (!user) return res.status(400).send("User not found");
-  // For each friend, return their username, a dummy profileImage, and a dummy status
+  
+  if (!user) return res.status(404).send("User not found");
+  
   const friendDetails = user.friends.map(friendName => {
-    const friend = users.find(u => u.username === friendName) || {};
-    return {
-      username: friendName,
-      profileImage: friend.profileImage || '/images/default.png',
-      status: friend.status || "online"  // simulate online status
-    };
-  });
+      const friend = users.find(u => u.username === friendName);
+      if (!friend) return null;
+      
+      return {
+          id: friend.id,
+          username: friend.username,
+          profileImage: friend.profileImage || '/images/default.png',
+          status: friend.status || "online",  // You can implement real status tracking
+          lastSeen: friend.lastSeen || new Date().toISOString()
+      };
+  }).filter(f => f !== null);
+  
   res.status(200).json(friendDetails);
 });
 
@@ -285,25 +319,26 @@ app.get('/user-chats', (req, res) => {
   const userId = req.query.userId;
   if(!userId) return res.status(400).send("userId required");
   
-  const messages = loadMessages();
-  console.log('Finding chats for user:', userId);
-  
-  // Get all chats where user is either creator or participant
-  const userChats = messages.filter(chat => {
-    const isParticipant = chat.participants && chat.participants.includes(userId);
-    const isCreator = chat.creator === userId;
-    const isPublic = chat.type === "chat"; // System/public chats
+  try {
+    const messages = loadMessages();
+    console.log('Finding chats for user:', userId);
     
-    console.log(`Chat ${chat.id}: participant=${isParticipant}, creator=${isCreator}, public=${isPublic}`);
-    return isParticipant || isCreator || isPublic;
-  });
-  
-  // Split into created and received chats
-  const yourChats = userChats.filter(chat => chat.creator === userId);
-  const friendChats = userChats.filter(chat => chat.creator !== userId);
-  
-  console.log(`Found ${yourChats.length} created chats and ${friendChats.length} received chats`);
-  res.status(200).json({ yourChats, friendChats });
+    // Get all chat types
+    const systemChats = messages.filter(msg => msg.type === 'chat');
+    const friendChats = messages.filter(msg => 
+        msg.type === 'friend-chat' && 
+        msg.participants && 
+        msg.participants.includes(userId)
+    );
+    
+    console.log(`Found ${systemChats.length} system chats and ${friendChats.length} friend chats`);
+    
+    // Send both types of chats
+    res.status(200).json([...systemChats, ...friendChats]);
+  } catch (error) {
+    console.error('Error loading chats:', error);
+    res.status(500).send('Failed to load chats');
+  }
 });
 
 // Updated friend chat creation endpoint to use user id's
