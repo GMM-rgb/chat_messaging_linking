@@ -24,6 +24,12 @@ if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR);
 }
 
+// Create user images directory if it doesn't exist
+const USER_IMAGES_DIR = 'user_account_images';
+if (!fs.existsSync(USER_IMAGES_DIR)) {
+  fs.mkdirSync(USER_IMAGES_DIR);
+}
+
 // Setup multer storage to use conversation-specific folders
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -41,6 +47,23 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage });
+
+// Setup user image storage
+const userImageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const userId = req.body.userId;
+    const userDir = path.join(USER_IMAGES_DIR, userId);
+    if (!fs.existsSync(userDir)) {
+      fs.mkdirSync(userDir, { recursive: true });
+    }
+    cb(null, userDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, 'profile' + path.extname(file.originalname));
+  }
+});
+
+const uploadUserImage = multer({ storage: userImageStorage });
 
 // Load users and messages from JSON files
 const loadUsers = () => JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
@@ -315,6 +338,38 @@ app.post('/create-friend-chat', (req, res) => {
   saveMessages(messages);
   res.status(200).send(friendChat);
 });
+
+// Add new endpoints for account management
+app.post('/update-profile-image', uploadUserImage.single('profileImage'), (req, res) => {
+  const { userId } = req.body;
+  if (!userId || !req.file) {
+    return res.status(400).send('Missing user ID or file');
+  }
+
+  const users = loadUsers();
+  const user = users.find(u => u.id === userId);
+  if (!user) return res.status(404).send('User not found');
+
+  user.profileImage = path.join(userId, req.file.filename);
+  saveUsers(users);
+  res.status(200).json({ profileImage: user.profileImage });
+});
+
+app.post('/change-password', (req, res) => {
+  const { userId, oldPassword, newPassword } = req.body;
+  const users = loadUsers();
+  const user = users.find(u => u.id === userId);
+
+  if (!user) return res.status(404).send('User not found');
+  if (user.password !== oldPassword) return res.status(401).send('Invalid current password');
+
+  user.password = newPassword;
+  saveUsers(users);
+  res.status(200).send('Password updated successfully');
+});
+
+// Serve user profile images
+app.use('/user-images', express.static(USER_IMAGES_DIR));
 
 // Start server binding to all network interfaces
 app.listen(PORT, '0.0.0.0', () => {

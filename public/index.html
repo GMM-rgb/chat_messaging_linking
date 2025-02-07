@@ -367,6 +367,92 @@
             padding: 2px 4px;
             box-sizing: border-box;
         }
+
+        /* Account page sliding panel */
+        .account-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 400px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .account-panel.show {
+            right: 0;
+        }
+
+        /* Grid animation for account panel */
+        .account-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px) 0 0 / 20px 20px,
+                linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px) 0 0 / 20px 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .account-panel.show::before {
+            opacity: 1;
+            animation: gridFizzle 0.5s ease-out;
+        }
+
+        @keyframes gridFizzle {
+            0% { transform: scale(1.2); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Header controls */
+        .header-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+        }
+
+        .header-controls button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .profile-image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .profile-image-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #007bff;
+            object-fit: cover;
+        }
+
+        .account-form {
+            margin-top: 20px;
+        }
+
+        .account-form input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
     </style>
 </head>
 
@@ -453,6 +539,30 @@
         <div class="tab-content" id="friendContent">
             <!-- Friend list items populated here -->
         </div>
+    </div>
+
+    <!-- Add header controls after body tag -->
+    <div class="header-controls">
+        <button id="accountBtn">Account</button>
+        <button id="logoutBtn">Logout</button>
+    </div>
+
+    <!-- Add account panel before closing body tag -->
+    <div class="account-panel" id="accountPanel">
+        <h2>Account Settings</h2>
+        <div class="profile-image-container">
+            <img id="profileImage" src="/images/default.png" alt="Profile">
+            <input type="file" id="profileImageInput" accept="image/*" style="display: none">
+            <button onclick="document.getElementById('profileImageInput').click()">Change Profile Picture</button>
+        </div>
+        <div class="account-form">
+            <h3>Change Password</h3>
+            <input type="password" id="currentPassword" placeholder="Current Password">
+            <input type="password" id="newPassword" placeholder="New Password">
+            <input type="password" id="confirmPassword" placeholder="Confirm New Password">
+            <button id="changePasswordBtn">Update Password</button>
+        </div>
+        <button style="position:absolute; top:10px; right:10px" onclick="closeAccountPanel()">×</button>
     </div>
 
     <script>
@@ -643,6 +753,9 @@
                 document.getElementById('authSection').classList.add('hidden');
                 document.getElementById('appSection').classList.remove('hidden');
                 loadUserChats();
+                if (user.profileImage) {
+                    document.getElementById('profileImage').src = '/user-images/' + user.profileImage;
+                }
             }).catch(err => alert(err.message));
         });
 
@@ -918,6 +1031,80 @@
         // Cleanup polling when switching chats or closing the app
         window.addEventListener('beforeunload', () => {
             if (pollInterval) clearInterval(pollInterval);
+        });
+
+        // Add account panel controls
+        document.getElementById('accountBtn').addEventListener('click', () => {
+            document.getElementById('accountPanel').classList.add('show');
+        });
+
+        function closeAccountPanel() {
+            document.getElementById('accountPanel').classList.remove('show');
+        }
+
+        // Profile image upload
+        document.getElementById('profileImageInput').addEventListener('change', function(e) {
+            if (!e.target.files.length) return;
+            
+            const formData = new FormData();
+            formData.append('profileImage', e.target.files[0]);
+            formData.append('userId', currentUser.id);
+
+            fetch('/update-profile-image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('profileImage').src = '/user-images/' + data.profileImage;
+                // Update the current user's profile image
+                currentUser.profileImage = data.profileImage;
+            })
+            .catch(err => alert('Failed to update profile image'));
+        });
+
+        // Password change
+        document.getElementById('changePasswordBtn').addEventListener('click', function() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match');
+                return;
+            }
+
+            fetch('/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: currentUser.id,
+                    oldPassword: currentPassword,
+                    newPassword: newPassword
+                })
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert('Password updated successfully');
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                } else {
+                    alert('Failed to update password');
+                }
+            });
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                if (pollInterval) clearInterval(pollInterval);
+                document.getElementById('appSection').classList.add('hidden');
+                document.getElementById('authSection').classList.remove('hidden');
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+            }
         });
     </script>
 </body>
